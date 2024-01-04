@@ -28,13 +28,6 @@ class _DeviceRegisterState extends State<DeviceRegister> {
   bool _obscurePort = false;
   bool _obscureHost = false;
 
-  var players = [
-    {"Name": "Josh", "Age": "25"},
-    {"Name": "Rick", "Age": "26"},
-    {"Name": "Michael", "Age": "22"},
-    {"Name": "Sander", "Age": "23"},
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
