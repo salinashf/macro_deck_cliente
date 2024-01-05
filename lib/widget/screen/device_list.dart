@@ -34,7 +34,7 @@ class _DeviceList extends State<DeviceList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Login App"),
+          title: const Text("Saves Devices"),
           elevation: 0,
           actions: [
             Padding(
@@ -45,20 +45,20 @@ class _DeviceList extends State<DeviceList> {
                   border: Border.all(color: Colors.white),
                 ),
                 child: IconButton(
-                  onPressed: () {
-                    //_boxLogin.clear();
-                    //_boxLogin.put("loginStatus", false);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return const DeviceConnect();
-                        },
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.logout_rounded),
-                ),
+                    icon: const Icon(Icons.refresh_sharp),
+                    tooltip: 'Reload',
+                    onPressed: () {
+                      //_boxLogin.clear();
+                      //_boxLogin.put("loginStatus", false);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const DeviceConnect();
+                          },
+                        ),
+                      );
+                    }),
               ),
             )
           ],
