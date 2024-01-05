@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:macro_deck_client/util/constants.dart';
 import 'package:macro_deck_client/util/custom_logger.dart';
-import 'package:macro_deck_client/widget/screen/list_connect.dart';
+import 'package:macro_deck_client/widget/screen/device_list.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import 'device_register.dart';
@@ -171,7 +171,7 @@ class _DeviceConnectState extends State<DeviceConnect> {
                             context,
                             MaterialPageRoute(
                               builder: (context) {
-                                return const DeviceList();
+                                return const DeviceRegister();
                               },
                             ),
                           );
@@ -187,7 +187,7 @@ class _DeviceConnectState extends State<DeviceConnect> {
                             context,
                             MaterialPageRoute(
                               builder: (context) {
-                                return const DeviceRegister();
+                                return const DeviceList();
                               },
                             ),
                           );
