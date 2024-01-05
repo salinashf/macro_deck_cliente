@@ -24,7 +24,7 @@ class _DeviceRegisterState extends State<DeviceRegister> {
   final TextEditingController _ctrlPort = TextEditingController();
   //final TextEditingController _ctrlBtnReg = TextEditingController();
 
-  final Box _boxDevices = Hive.box("accounts");
+  final Box _boxDevices = Hive.box("devices");
   bool _obscurePort = false;
   bool _obscureHost = false;
 
@@ -160,16 +160,8 @@ class _DeviceRegisterState extends State<DeviceRegister> {
                       if (_formKey.currentState?.validate() ?? false) {
                         _boxDevices.put(
                           _ctrlDeviceName.text,
-                          '$_ctrlHost:$_ctrlPort',
+                          '${_ctrlHost.text}:${_ctrlPort.text}',
                         );
-                        // ignore: unused_local_variable
-
-                        _boxDevices.toMap().forEach((key, value) {});
-
-                        for (var element in _boxDevices.keys) {
-                          logger.w(element);
-                        }
-
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             width: 200,

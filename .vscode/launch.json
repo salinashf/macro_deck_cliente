@@ -5,9 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "macro_deck_client",
+            "name": "Redmin 8 ",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "deviceId": "9648a0940107"
         },
         {
             "name": "macro_deck_client (profile mode)",
@@ -20,6 +21,18 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
-        }
+        },
+        {
+            "name": "Web edge",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+              "-d",
+              "edge"
+            ]
+          }
+
+        
     ]
 }

@@ -1,32 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:macro_deck_client/model/saved_devices.dart';
-import 'package:macro_deck_client/widget/screen/device_connect.dart';
+import 'package:macro_deck_client/util/custom_logger.dart';
 
 class DeviceList extends StatefulWidget {
   const DeviceList({super.key});
-  //final Box _boxLogin = Hive.box("login");
+
   @override
+  // ignore: library_private_types_in_public_api
   _DeviceList createState() => _DeviceList();
 }
 
 class _DeviceList extends State<DeviceList> {
   List<SavedDevices> deviceSaves = [];
+  final Box _boxDevices = Hive.box("devices");
 
   @override
   void initState() {
-    //adding item to list, you can add using json from network
-    deviceSaves.add(SavedDevices(
-        id: "1", idConnection: "Mac house", host: "192.69.1.1", port: "3344"));
-    deviceSaves.add(SavedDevices(
-        id: "2", idConnection: "Mac house2", host: "192.69.1.2", port: "111"));
-    deviceSaves.add(SavedDevices(
-        id: "3", idConnection: "Mac house3", host: "192.69.1.14", port: "222"));
-    deviceSaves.add(SavedDevices(
-        id: "4", idConnection: "Mac house4", host: "92.9.1.14", port: "333"));
-    deviceSaves.add(SavedDevices(
-        id: "5", idConnection: "Mac house34", host: "92.69.1.55", port: "33"));
-
+    int index = 0;
+    deviceSaves.clear();
+    _boxDevices.toMap().forEach((key, value) {
+      final List<String> values = value.split(':');
+      deviceSaves.add(SavedDevices(
+          id: index.toString(),
+          idConnection: key,
+          host: values[0],
+          port: values[1]));
+      index++;
+    });
     super.initState();
   }
 
@@ -44,21 +45,25 @@ class _DeviceList extends State<DeviceList> {
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white),
                 ),
-                child: IconButton(
-                    icon: const Icon(Icons.refresh_sharp),
-                    tooltip: 'Reload',
-                    onPressed: () {
-                      //_boxLogin.clear();
-                      //_boxLogin.put("loginStatus", false);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const DeviceConnect();
-                          },
-                        ),
-                      );
-                    }),
+                child: FloatingActionButton.extended(
+                  onPressed: () {
+                    _boxDevices.clear();
+                    deviceSaves.clear();
+                    setState(() {
+                      //refresh UI after deleting element from list
+                    });
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) {
+                    //       return const DeviceConnect();
+                    //     },
+                    //   ),
+                    // );
+                  },
+                  icon: const Icon(Icons.delete),
+                  label: const Text('Delete All'),
+                ),
               ),
             )
           ],
@@ -71,7 +76,7 @@ class _DeviceList extends State<DeviceList> {
                 return Card(
                   child: ListTile(
                     title: Text(sDeviceOne.idConnection),
-                    subtitle: Text(sDeviceOne.host + " : " + sDeviceOne.port),
+                    subtitle: Text("${sDeviceOne.host} : ${sDeviceOne.port}"),
                     leading: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -85,10 +90,16 @@ class _DeviceList extends State<DeviceList> {
                               Theme.of(context).colorScheme.primaryContainer),
                       child: const Icon(Icons.delete),
                       onPressed: () {
-                        //delete action for this button
-                        deviceSaves.removeWhere((element) {
-                          return element.id == sDeviceOne.id;
-                        }); //go through the loop and match content to delete from list
+                        logger.w(sDeviceOne.idConnection);
+                        if (_boxDevices.containsKey(sDeviceOne.idConnection)) {
+                          _boxDevices.delete(sDeviceOne.idConnection);
+                          //delete action for this button
+                          deviceSaves.removeWhere((element) {
+                            return element.idConnection ==
+                                sDeviceOne.idConnection;
+                          });
+                        }
+                        //go through the loop and match content to delete from list
                         setState(() {
                           //refresh UI after deleting element from list
                         });

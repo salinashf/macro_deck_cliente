@@ -20,7 +20,7 @@ class DeviceConnect extends StatefulWidget {
 class _DeviceConnectState extends State<DeviceConnect> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final Box _boxLogin = Hive.box("login");
-  final Box _boxAccounts = Hive.box("accounts");
+  final Box _boxAccounts = Hive.box("devices");
 
   final TextEditingController _ctrlHost = TextEditingController();
   final TextEditingController _ctrlPort = TextEditingController();
@@ -187,7 +187,7 @@ class _DeviceConnectState extends State<DeviceConnect> {
                             context,
                             MaterialPageRoute(
                               builder: (context) {
-                                return const DeviceList();
+                                return DeviceList();
                               },
                             ),
                           );
