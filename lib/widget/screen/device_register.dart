@@ -79,11 +79,18 @@ class _DeviceRegisterState extends State<DeviceRegister> {
                 controller: _ctrlHost,
                 obscureText: _obscureHost,
                 focusNode: _focusNodeHost,
-                keyboardType: TextInputType.name,
-                inputFormatters: <TextInputFormatter>[
-                  MaskTextInputFormatter(
-                      mask: '###.###.###.###', filter: {"#": RegExp(r'[0-9]')}),
+                keyboardType: const TextInputType.numberWithOptions(
+                    decimal: false, signed: false),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(
+                    RegExp(validateSeqnoIP),
+                  ),
                 ],
+
+                // inputFormatters: <TextInputFormatter>[
+                //   MaskTextInputFormatter(
+                //       mask: '###.###.###.###', filter: {"#": RegExp(r'[0-9]')}),
+                // ],
                 decoration: InputDecoration(
                   labelText: "Host/IP",
                   prefixIcon: const Icon(Icons.computer),
@@ -117,7 +124,12 @@ class _DeviceRegisterState extends State<DeviceRegister> {
               TextFormField(
                 controller: _ctrlPort,
                 focusNode: _focusNodePort,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(
+                    RegExp(validateSeqnoPort),
+                  ),
+                ],
                 decoration: InputDecoration(
                   labelText: "Port",
                   prefixIcon: const Icon(Icons.network_check_rounded),
@@ -192,11 +204,6 @@ class _DeviceRegisterState extends State<DeviceRegister> {
                     ],
                   ),
                 ],
-              ),
-              const SizedBox(height: 5),
-              Text(
-                "Existing Devices",
-                style: Theme.of(context).textTheme.headlineMedium,
               ),
             ],
           ),

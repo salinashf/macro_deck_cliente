@@ -155,6 +155,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.7.0"
+  masked_text_field:
+    dependency: "direct main"
+    description:
+      name: masked_text_field
+      sha256: "35f9d09cb8c117df5c6b4f945f241432555ff9d16520e3636fdb86780a34972b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   matcher:
     dependency: transitive
     description:

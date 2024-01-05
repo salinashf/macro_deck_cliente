@@ -35,7 +35,7 @@ class _DeviceList extends State<DeviceList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Saves Devices"),
+          title: const Text("Devices"),
           elevation: 0,
           actions: [
             Padding(
