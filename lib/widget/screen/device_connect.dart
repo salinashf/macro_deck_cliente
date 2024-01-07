@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:macro_deck_client/util/constants.dart';
-import 'package:macro_deck_client/util/custom_logger.dart';
 import 'package:macro_deck_client/util/random_ext.dart';
 import 'package:macro_deck_client/widget/screen/device_list.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
