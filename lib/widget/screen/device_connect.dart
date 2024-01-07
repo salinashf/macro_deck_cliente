@@ -150,9 +150,6 @@ class _DeviceConnectState extends State<DeviceConnect> {
                     ),
                     onPressed: () {
                       if (_frmKey.currentState?.validate() ?? false) {
-                        _boxdeviceID.put("loginStatus", true);
-                        _boxdeviceID.put("userName", _ctrlHost.text);
-
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
