@@ -65,8 +65,8 @@ class _DeviceRegisterState extends State<DeviceRegister> {
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter name device.";
-                  } else if (value.length < 8) {
-                    return "Name device  must be at least 8 character.";
+                  } else if (value.length < 5) {
+                    return "Name device  must be at least 5 character.";
                   } else if (_boxDevices.containsKey(value)) {
                     return "Device is already registered.";
                   }

@@ -17,4 +17,5 @@ Future<void> _initHive() async {
   await Hive.openBox("login");
   await Hive.openBox("accounts");
   await Hive.openBox("devices");
+  await Hive.openBox("device_id");
 }

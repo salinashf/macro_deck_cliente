@@ -1,10 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:macro_deck_client/util/constants.dart';
 import 'package:macro_deck_client/util/custom_logger.dart';
+import 'package:macro_deck_client/util/random_ext.dart';
 import 'package:macro_deck_client/widget/screen/device_list.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'device_register.dart';
 
@@ -18,27 +22,32 @@ class DeviceConnect extends StatefulWidget {
 }
 
 class _DeviceConnectState extends State<DeviceConnect> {
-  final GlobalKey<FormState> _formKey = GlobalKey();
-  final Box _boxLogin = Hive.box("login");
-  final Box _boxAccounts = Hive.box("devices");
-
+  final GlobalKey<FormState> _frmKey = GlobalKey();
+  final GlobalKey<FormState> _frmDlgKey = GlobalKey();
+  final Box _boxdeviceID = Hive.box("device_id");
   final TextEditingController _ctrlHost = TextEditingController();
   final TextEditingController _ctrlPort = TextEditingController();
+  final TextEditingController _ctrlDlgDeviceID = TextEditingController();
   final FocusNode _focusFieldDeviceConnect = FocusNode();
 
   bool _obscureHost = false;
   bool _obscurePort = false;
+  String _deviceID = '';
 
   @override
   Widget build(BuildContext context) {
-    if (_boxLogin.get("loginStatus") ?? false) {
-      return DeviceList();
+    //_deviceID = _boxdeviceID.get("ID_DEVICE") ?? Random().getRandomString(9);
+    if (_boxdeviceID.containsKey("ID_DEVICE")) {
+      _deviceID = _boxdeviceID.get("ID_DEVICE");
+    } else {
+      _deviceID = Random().getRandomString(9);
+      _boxdeviceID.put("ID_DEVICE", _deviceID.trim());
     }
 
     return Scaffold(
       //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       body: Form(
-        key: _formKey,
+        key: _frmKey,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(30.0),
           child: Column(
@@ -88,8 +97,6 @@ class _DeviceConnectState extends State<DeviceConnect> {
                     return "Please enter Host/IP.";
                   } else if (!RegExp(validateIP).hasMatch(value)) {
                     return "Host/IP not is valid";
-                  } else if (!_boxAccounts.containsKey(value)) {
-                    return "Username is not registered.";
                   }
                   return null;
                 },
@@ -127,8 +134,6 @@ class _DeviceConnectState extends State<DeviceConnect> {
                     return "Please enter port.";
                   } else if (!RegExp(validatePort).hasMatch(value)) {
                     return "Port not is valid";
-                  } else if (value != _boxAccounts.get(_ctrlHost.text)) {
-                    return "Wrong port.";
                   }
                   return null;
                 },
@@ -144,15 +149,15 @@ class _DeviceConnectState extends State<DeviceConnect> {
                       ),
                     ),
                     onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        _boxLogin.put("loginStatus", true);
-                        _boxLogin.put("userName", _ctrlHost.text);
+                      if (_frmKey.currentState?.validate() ?? false) {
+                        _boxdeviceID.put("loginStatus", true);
+                        _boxdeviceID.put("userName", _ctrlHost.text);
 
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) {
-                              return DeviceList();
+                              return const DeviceList();
                             },
                           ),
                         );
@@ -165,8 +170,7 @@ class _DeviceConnectState extends State<DeviceConnect> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          _formKey.currentState?.reset();
-
+                          _frmKey.currentState?.reset();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -181,13 +185,13 @@ class _DeviceConnectState extends State<DeviceConnect> {
                       const Text("/"),
                       TextButton(
                         onPressed: () {
-                          _formKey.currentState?.reset();
+                          _frmKey.currentState?.reset();
 
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) {
-                                return DeviceList();
+                                return const DeviceList();
                               },
                             ),
                           );
@@ -202,17 +206,49 @@ class _DeviceConnectState extends State<DeviceConnect> {
                       const Text("Device ID"),
                       TextButton(
                         onPressed: () {
-                          _formKey.currentState?.reset();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return const DeviceRegister();
-                              },
-                            ),
-                          );
+                          _ctrlDlgDeviceID.text = _deviceID;
+                          Alert(
+                              context: context,
+                              title: "DEVICE",
+                              content: Form(
+                                  key: _frmDlgKey,
+                                  child: Column(
+                                    children: <Widget>[
+                                      const SizedBox(height: 20),
+                                      TextFormField(
+                                        controller: _ctrlDlgDeviceID,
+                                        validator: (String? value) {
+                                          if (value == null || value.isEmpty) {
+                                            return "Please enter Device ID";
+                                          } else if (value.length < 5) {
+                                            return "Name device  must be at least 5 character.";
+                                          }
+                                          return null;
+                                        },
+                                        decoration: const InputDecoration(
+                                          icon: Icon(Icons.computer),
+                                          labelText: 'Device ID',
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                              buttons: [
+                                DialogButton(
+                                  onPressed: () {
+                                    if (_frmDlgKey.currentState?.validate() ??
+                                        false) {
+                                      _deviceID = _ctrlDlgDeviceID.text;
+                                      _boxdeviceID.put(
+                                          "ID_DEVICE", _deviceID.trim());
+                                      Navigator.pop(context);
+                                      setState(() {});
+                                    }
+                                  },
+                                  child: const Text("Change."),
+                                )
+                              ]).show();
                         },
-                        child: const Text("DDE434"),
+                        child: Text(_deviceID),
                       ),
                     ],
                   )
